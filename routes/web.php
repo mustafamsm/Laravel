@@ -67,3 +67,4 @@ Route::get('/',function(){
     return "Home";
 }) ;
 
+Route::get('fillable','CrudController@getOffers');
