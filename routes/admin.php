@@ -11,9 +11,9 @@
 |
 */
 
-Route::get('/admin', function () {
-    return "Hello admin";
-});
+//Route::get('/admin', function () {
+//    return "Hello admin";
+//});
 
 Route::namespace('Front')->group(function (){
 
