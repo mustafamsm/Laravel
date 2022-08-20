@@ -18,10 +18,6 @@
 // });
 
 
-
- 
-
-
 // //route paramters
 
 
@@ -60,18 +56,15 @@
 //     return view("index");
 // });
 
-Auth::routes(['verify'=>true]);
+Auth::routes(['verify' => true]);
 
 Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
-Route::get('/',function(){
+Route::get('/', function () {
     return "Home";
-}) ;
+});
 
-Route::get('fillable','CrudController@getOffers');
-Route::get('youtube','CrudController@getVideo')->middleware('auth');
-
-
-
+Route::get('fillable', 'CrudController@getOffers');
+Route::get('youtube', 'CrudController@getVideo')->middleware('auth');
 
 
 //prefix Route for  multi lenge
@@ -79,40 +72,39 @@ Route::group(['prefix' => LaravelLocalization::setLocale(), 'middleware' => ['lo
     Route::group(['prefix' => 'offers'], function () {
         Route::get('create', 'CrudController@create');
         Route::post('store', 'CrudController@store')->name('offers.store');
-        Route::get('all','CrudController@getAllOffers')->name('offers.all');
+        Route::get('all', 'CrudController@getAllOffers')->name('offers.all');
 
-        Route::get('edit/{offer_id}','CrudController@editOffer');
-        Route::post('update/{offer_id}','CrudController@updateOffer')->name('offers.update');
-        Route::get('delete/{offer_id}','CrudController@deleteOffer')->name('offers.delete');
+        Route::get('edit/{offer_id}', 'CrudController@editOffer');
+        Route::post('update/{offer_id}', 'CrudController@updateOffer')->name('offers.update');
+        Route::get('delete/{offer_id}', 'CrudController@deleteOffer')->name('offers.delete');
     });
 });
 
 //ajaxOffer Routs
-Route::group(['prefix'=>'ajax-offers'],function (){
-   Route::get('create','OfferController@createOffer')->name('ajaxoffer.create');
-   Route::post('store','OfferController@storeOffer')->name('ajaxoffer.store');
-   Route::get('all','OfferController@all')->name('ajaxoffer.all');
-   Route::post('delete','OfferController@delete')->name('ajaxoffer.delete');
-    Route::get('edit/{offer_id}','OfferController@edit')->name("ajaxoffer.edit");
-    Route::post('update','OfferController@update')->name('ajaxoffer.update');
+Route::group(['prefix' => 'ajax-offers'], function () {
+    Route::get('create', 'OfferController@createOffer')->name('ajaxoffer.create');
+    Route::post('store', 'OfferController@storeOffer')->name('ajaxoffer.store');
+    Route::get('all', 'OfferController@all')->name('ajaxoffer.all');
+    Route::post('delete', 'OfferController@delete')->name('ajaxoffer.delete');
+    Route::get('edit/{offer_id}', 'OfferController@edit')->name("ajaxoffer.edit");
+    Route::post('update', 'OfferController@update')->name('ajaxoffer.update');
 });
-
 
 
 #################### Begin Authentication && Guards ###############
-Route::group(['middleware'=>'CheckAge','namespace'=>'Auth'],function (){
-    Route::get('adults','CustomAuthController@Adualt')->name('adult') ;
+Route::group(['middleware' => 'CheckAge', 'namespace' => 'Auth'], function () {
+    Route::get('adults', 'CustomAuthController@Adualt')->name('adult');
 
 });
- Route::get("test",function (){
-     return "Not adults";
- })->name('test');
+Route::get("test", function () {
+    return "Not adults";
+})->name('test');
 
 //gurdes
-Route::get('admin','Auth\CustomAuthController@admin')->name('admin')->middleware('auth:admin') ;
-Route::get('site','Auth\CustomAuthController@site')->name('site')->middleware('auth:web') ;
-Route::get('admin/login','Auth\CustomAuthController@login')->name('admin.login')  ;
-Route::post('admin/login','Auth\CustomAuthController@checkAdminLogin')->name('save.admin.login')  ;
+Route::get('admin', 'Auth\CustomAuthController@admin')->name('admin')->middleware('auth:admin');
+Route::get('site', 'Auth\CustomAuthController@site')->name('site')->middleware('auth:web');
+Route::get('admin/login', 'Auth\CustomAuthController@login')->name('admin.login');
+Route::post('admin/login', 'Auth\CustomAuthController@checkAdminLogin')->name('save.admin.login');
 
 
 #################### End Authentication && Guards #################
@@ -123,6 +115,21 @@ Route::get('has-one', 'RelationsController\RelationsController@hasOneRelation');
 Route::get('has-one-resrve', 'RelationsController\RelationsController@hasOneRelationResrve');
 Route::get('get-user-has-phone', 'RelationsController\RelationsController@getUserHasPhone');
 Route::get('get-user-not-has-phone', 'RelationsController\RelationsController@getUserNotHasPhone');
+
+
+################## Begin one to many realtion ###########
+Route::get('hospital-has-many', 'RelationsController\RelationsController@getHospitalDoctors');
+Route::get('hospitals', 'RelationsController\RelationsController@hostpitals')->name('all');
+Route::get('hospitals/{hospital_id}', 'RelationsController\RelationsController@delete')->name('hospital.delete');
+
+Route::get('doctors/{hospital_id}', 'RelationsController\RelationsController@doctors')->name('hospital.doctors');
+
+Route::get('hospitals_has_doctors', 'RelationsController\RelationsController@hostpitalsHasDoctors');
+Route::get('hospitals_has_doctors_male', 'RelationsController\RelationsController@hostpitalsHasDoctorsMale');
+Route::get('hospitals_not_has_doctors', 'RelationsController\RelationsController@hostpitalsNotHasDoctors');
+
+
+################ end one to many realtion ##############
 
 
 ################## End realtions routs ############

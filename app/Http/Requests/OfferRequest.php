@@ -30,6 +30,7 @@ class OfferRequest extends FormRequest
            'price'=>'required|numeric',
            'details_ar'=>'required',
            'details_en'=>'required',
+            'photo'=>'required'
        ];
     }
     public  function messages()

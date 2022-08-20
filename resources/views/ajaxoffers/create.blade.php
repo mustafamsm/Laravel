@@ -23,9 +23,7 @@
                 <label for="photo">اختر صورة العرض</label>
                 <input type="file" class="form-control @error('photo') is-invalid @enderror" id="photo" name="photo"
                        aria-describedby="emailHelp">
-                @error('photo')
-                <small class="form-text text-danger ">{{$message}}</small>
-                @enderror
+                <small id="photo_error"class="form-text text-danger "></small>
             </div>
 
 
@@ -33,27 +31,21 @@
                 <label for="name"> {{trans('messages.Offer name ar')}}</label>
                 <input type="text" class="form-control @error('name_ar') is-invalid @enderror" id="name_ar"
                        name="name_ar" aria-describedby="emailHelp">
-                @error('name_ar')
-                <small class="form-text text-danger ">{{$message}}</small>
-                @enderror
+                <small id="name_ar_error"class="form-text text-danger "></small>
             </div>
             <div class="form-group">
                 <label for="name"> {{trans('messages.Offer name en')}}</label>
                 <input type="text" class="form-control @error('name_en') is-invalid @enderror" id="name_en"
                        name="name_en" aria-describedby="emailHelp">
-                @error('name_en')
-                <small class="form-text text-danger ">{{$message}}</small>
-                @enderror
+                <small id="name_en_error"class="form-text text-danger "></small>
             </div>
 
 
             <div class="form-group">
                 <label for="price">{{trans('messages.Offer price ')}}</label>
-                <input type="password" class="form-control @error('price') is-invalid @enderror" name="price"
+                <input   type="number" class="form-control @error('price') is-invalid @enderror" name="price"
                        id="price">
-                @error('price')
-                <small class="form-text text-danger">{{$message}}</small>
-                @enderror
+                <small id="price_error"class="form-text text-danger "></small>
             </div>
 
 
@@ -61,18 +53,15 @@
                 <label for="offer_details">{{trans('messages.Offer details ar')}}</label>
                 <input type="text" class="form-control @error('details_ar') is-invalid @enderror" name="details_ar"
                        id="offer_details">
-                @error('details_ar')
-                <small class="form-text text-danger">{{$message}}</small>
-                @enderror
+                <small id="details_ar_error"class="form-text text-danger "></small>
             </div>
 
             <div class="form-group">
                 <label for="offer_details">{{trans('messages.Offer details en')}}</label>
                 <input type="text" class="form-control @error('details_en') is-invalid @enderror" name="details_en"
                        id="offer_details">
-                @error('details_en')
-                <small class="form-text text-danger">{{$message}}</small>
-                @enderror
+                <small id="datails_en_error"class="form-text text-danger "></small>
+
             </div>
 
 
@@ -87,6 +76,12 @@
     <script>
         $(document).on('click', '#save-offer', function (e) {
             e.preventDefault();
+            $('#photo_error').text('');
+            $('#name_ar_error').text('');
+            $('#name_en_error').text('');
+            $('#price_error').text('');
+            $('#details_ar_error').text('');
+            $('#details_en_error').text('');
             var formData = new FormData($('#offerform')[0]);
             $.ajax({
                 type: 'post',
@@ -103,7 +98,10 @@
 
                 },
                 error: function (reject) {
-
+                    var response=$.parseJSON(reject.responseText);
+                    $.each(response.errors,function (key,val) {
+                        $("#"+key+"_error").text(val[0]);
+                    })
                 }
             });
         })
