@@ -29,8 +29,8 @@
                                 <td scope="row">{{$doctor->id}}</td>
                                 <td>{{$doctor->name}}</td>
                                 <td>{{$doctor->title}}</td>
-                                <td><a href="{{route('hospital.doctors',$doctor->id)}}" class="btn btn-success">عرض
-                                        الاطباء</a></td>
+                                <td><a href="{{route('doctor.service',$doctor->id)}}" class="btn btn-success">عرض
+                                        الخدمات</a></td>
                             </tr>
 
                         @endforeach

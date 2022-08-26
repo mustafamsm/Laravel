@@ -132,4 +132,18 @@ Route::get('hospitals_not_has_doctors', 'RelationsController\RelationsController
 ################ end one to many realtion ##############
 
 
+############### Begin many to many realtion #############
+
+Route::get('doctors-services','RelationsController\RelationsController@getDoctorService');
+Route::get('services-doctors','RelationsController\RelationsController@getServiceDoctor');
+Route::get('doctors/services/{doctors_id}', 'RelationsController\RelationsController@getDoctorServicesById')->name('doctor.service');
+Route::post('saveServices-to-doctor','RelationsController\RelationsController@saveServicesToDoctor')->name('doctor.save');
+############### end many to many realtion #############
+
+
+############### end hasOneThrough realtion #############
+Route::get('has-one-through','RelationsController\RelationsController@getPatientDoctor');
+
+############### end hasOneThrough realtion #############
+
 ################## End realtions routs ############

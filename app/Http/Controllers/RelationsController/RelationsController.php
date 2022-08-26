@@ -5,10 +5,13 @@ namespace App\Http\Controllers\RelationsController;
 use App\Http\Controllers\Controller;
 use App\Models\Doctor;
 use App\Models\Hospital;
+use App\Models\Patient;
 use App\Models\Phone;
+use App\Models\Service;
 use App\User;
 use Illuminate\Http\Request;
 use phpDocumentor\Reflection\Utils;
+use PhpParser\Comment\Doc;
 use PhpParser\Lexer\TokenEmulator\ReadonlyTokenEmulator;
 
 class RelationsController extends Controller
@@ -125,8 +128,53 @@ class RelationsController extends Controller
 
         $hospital->doctors()->delete();
         $hospital->delete();
-    return redirect()->route('all');
+        return redirect()->route('all');
 
     }
-    ##########
+
+
+    public function getDoctorService()
+    {
+        $doctor = Doctor::with('services')->find(5);
+        return $doctor->name;
+//        return $doctor -> services;
+    }
+
+    public function getServiceDoctor()
+    {
+        return $doctors = Service::with(['doctors' => function ($q) {
+            $q->select('name', 'title');
+        }])->find(1);
+    }
+
+    public function getDoctorServicesById($doctor_id)
+    {
+        $doctor = Doctor::find($doctor_id);
+        $services = $doctor->services;
+        $doctors = Doctor::select('id', 'name')->get();
+        $allservice = Service::select('id', 'name')->get();
+        return view('doctors.services', compact('services', 'doctors', 'allservice'));
+    }
+
+    public function saveServicesToDoctor(Request $request)
+    {
+        $doctor = Doctor::find($request->doctor_id);
+        if (!$doctor) {
+            return abort('404');
+        }
+//        $doctor->services()->attach($request->servicesIds);//many to many insert to database
+//        $doctor->services()->sync($request->servicesIds);//many to many insert to database
+        $doctor->services()->syncWithoutDetaching($request->servicesIds);//many to many insert to database
+        return redirect()->back()->with('success', 'inserted sussflly');
+    }
+
+
+    public function getPatientDoctor()
+    {
+        $patient = Patient::find(2);
+        return $patient->doctor;
+
+
+    }
+##########
 }
