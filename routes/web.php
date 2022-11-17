@@ -11,6 +11,9 @@
 |
 */
 
+
+define('PAGINATION_COUNT', 5);
+
 // Route::get('/', "NewsController@index");
 
 // Route::get('/test1', function () {
@@ -73,6 +76,8 @@ Route::group(['prefix' => LaravelLocalization::setLocale(), 'middleware' => ['lo
         Route::get('create', 'CrudController@create');
         Route::post('store', 'CrudController@store')->name('offers.store');
         Route::get('all', 'CrudController@getAllOffers')->name('offers.all');
+        Route::get('all-Paginate', 'CrudController@getAllOffersPaginate');
+        Route::get('get-all-inactive-offer', 'CrudController@getAllInaciveOffer')->name('offers.inactive');
 
         Route::get('edit/{offer_id}', 'CrudController@editOffer');
         Route::post('update/{offer_id}', 'CrudController@updateOffer')->name('offers.update');
@@ -134,16 +139,38 @@ Route::get('hospitals_not_has_doctors', 'RelationsController\RelationsController
 
 ############### Begin many to many realtion #############
 
-Route::get('doctors-services','RelationsController\RelationsController@getDoctorService');
-Route::get('services-doctors','RelationsController\RelationsController@getServiceDoctor');
+Route::get('doctors-services', 'RelationsController\RelationsController@getDoctorService');
+Route::get('services-doctors', 'RelationsController\RelationsController@getServiceDoctor');
 Route::get('doctors/services/{doctors_id}', 'RelationsController\RelationsController@getDoctorServicesById')->name('doctor.service');
-Route::post('saveServices-to-doctor','RelationsController\RelationsController@saveServicesToDoctor')->name('doctor.save');
+Route::post('saveServices-to-doctor', 'RelationsController\RelationsController@saveServicesToDoctor')->name('doctor.save');
 ############### end many to many realtion #############
 
 
-############### end hasOneThrough realtion #############
-Route::get('has-one-through','RelationsController\RelationsController@getPatientDoctor');
+############### Begin hasOneThrough realtion #############
+Route::get('has-one-through', 'RelationsController\RelationsController@getPatientDoctor');
 
 ############### end hasOneThrough realtion #############
+
+############### Begin hasManyThrough realtion #############
+
+
+Route::get('has-many-through', 'RelationsController\RelationsController@getCountryDoctors');
+
+############### end hasManyThrough realtion #############
 
 ################## End realtions routs ############
+########## Begin Accessors and mutators ################
+Route::get('accessors', 'RelationsController\RelationsController@getDoctor');
+
+
+########## End Accessors and mutators ################
+
+
+########## Begin Collection Routes ##############
+
+Route::get('coll','ColletcController@index');
+Route::get('main','ColletcController@complex');
+Route::get('main-offer','ColletcController@complex_offer');
+Route::get('main-offer2','ColletcController@complex_offer_transForm');
+
+########## End Collection Routes ################

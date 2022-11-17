@@ -6,6 +6,7 @@ use App\Events\VideoViewer;
 use App\Http\Requests\OfferRequest;
 use App\Models\Offer;
 use App\Models\Video;
+use App\Scopes\OfferScope;
 use App\Traits\OfferTrait;
 use  Illuminate\Support\Facades\Validator;
 
@@ -74,8 +75,24 @@ class CrudController extends Controller
 
     public function getAllOffers()
     {
-        $offers = Offer::select('id', 'name_' . LaravelLocalization::getCurrentLocale() . ' as name', 'price', 'details_' . LaravelLocalization::getCurrentLocale() . ' as details','photo')->get();
+        $offers = Offer::select('id',
+            'name_' . LaravelLocalization::getCurrentLocale() . ' as name',
+            'price',
+            'details_' . LaravelLocalization::getCurrentLocale() . ' as details',
+            'photo')
+            ->withoutGlobalScope(OfferScope::class)->get();
         return view('Offers.all', compact('offers'));
+    }
+
+    public function getAllOffersPaginate()
+    {
+        $offers = Offer::select('id',
+            'name_' . LaravelLocalization::getCurrentLocale() . ' as name',
+            'price',
+            'details_' . LaravelLocalization::getCurrentLocale() . ' as details',
+            'photo')
+            ->withoutGlobalScope(OfferScope::class)->paginate(PAGINATION_COUNT);
+        return view('Offers.paginates', compact('offers'));
     }
 
     public function editOffer($offer_id)
@@ -116,12 +133,12 @@ class CrudController extends Controller
     public function deleteOffer($offer_id)
     {
         //check if offer id if exists
-       $offer= Offer::find($offer_id); //or Offer::where('id','$offer_id')->first();
-        if(!$offer){
-            return redirect()->back()->with(['error'=>__('messages.offer not exists')]);
+        $offer = Offer::find($offer_id); //or Offer::where('id','$offer_id')->first();
+        if (!$offer) {
+            return redirect()->back()->with(['error' => __('messages.offer not exists')]);
         }
         $offer->delete();
-        return redirect()->route('offers.all')->with(['success'=>__('messages.offer deleted successfully')]);
+        return redirect()->route('offers.all')->with(['success' => __('messages.offer deleted successfully')]);
 
     }
 
@@ -134,6 +151,23 @@ class CrudController extends Controller
 
 
         return view('video')->with('video', $video);
+    }
+
+
+    public function getAllInaciveOffer()
+    {
+        //where whereNull whereNotNull whereIn
+
+        //local scope
+//       return  Offer::Inactive()->get(); //all inactive offers
+
+           //global scope
+        return Offer::get(); //all inactive offers
+
+
+        //how to remove global scope
+//        return Offer::withoutGlobalScope(OfferScope::class)->get();
+
     }
 
 //        protected function getMessages(){
